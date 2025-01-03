@@ -1,0 +1,11 @@
+[package]
+name = "code-block-alignment"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+iced-x86 = "1.21.0"
+elf = "0.7.4"
+colored = "2.2.0"
+clap = { version = "4.5.23", features = ["derive"] }
+clap-num = "1.1.1"
