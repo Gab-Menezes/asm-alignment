@@ -1,5 +1,5 @@
 [package]
-name = "code-block-alignment"
+name = "asm-alignment"
 version = "0.1.0"
 edition = "2021"
 

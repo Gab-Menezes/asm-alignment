@@ -52,6 +52,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "asm-alignment"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "clap-num",
+ "colored",
+ "elf",
+ "iced-x86",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -105,17 +116,6 @@ name = "clap_lex"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f46ad14479a25103f283c0f10005961cf086d8dc42205bb44c46ac563475dca6"
-
-[[package]]
-name = "code-block-alignment"
-version = "0.1.0"
-dependencies = [
- "clap",
- "clap-num",
- "colored",
- "elf",
- "iced-x86",
-]
 
 [[package]]
 name = "colorchoice"
