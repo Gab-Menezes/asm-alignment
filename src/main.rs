@@ -83,14 +83,23 @@ fn print_disassemble(begin: u64, code: &[u8]) {
                 print!(" ");
             }
         }
-        for b in instr_bytes.iter() {
-            if red_64 {
-                print!("{}", format!("0x{b:02X}, ").red());
+        for (i, b) in instr_bytes.iter().enumerate() {
+            if i == instr_bytes.len() - 1 {
+                if red_64 {
+                    print!("{}", format!("0x{b:02X}").red());
+                } else {
+                    print!("{}", format!("0x{b:02X}").blue());
+                }
             } else {
-                print!("{}", format!("0x{b:02X}, ").blue());
+                if red_64 {
+                    print!("{}", format!("0x{b:02X}, ").red());
+                } else {
+                    print!("{}", format!("0x{b:02X}, ").blue());
+                }
             }
         }
-        println!();
+
+        println!(" ({} bytes)", instr_bytes.len());
     }
 }
 
