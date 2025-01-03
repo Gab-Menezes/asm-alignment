@@ -1,3 +1,5 @@
+use std::cmp::Reverse;
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use clap::Parser;
@@ -104,7 +106,10 @@ fn print_disassemble(begin: u64, code: &[u8]) {
 }
 
 
-fn print_table(begin: u64, code: &[u8]) {
+fn print_table(begin: u64, code: &[u8]) -> (HashMap<String, (u64, u64)>, usize) {
+    let mut mnemonic_count = HashMap::new();
+    let mut mnemonic_legnth = 0;
+
     println!();
     println!();
     for _ in 0..28 {
@@ -133,6 +138,11 @@ fn print_table(begin: u64, code: &[u8]) {
         decoder.decode_out(&mut instruction);
         output.clear();
         formatter.format_mnemonic_options(&instruction, &mut output, 0);
+
+        let (count, bytes_len) = mnemonic_count.entry(output.clone()).or_default();
+        *count += 1;
+        *bytes_len += instruction.len() as u64;
+        mnemonic_legnth = mnemonic_legnth.max(output.len());
 
         let ip = instruction.ip();
         let mut skip = 0;
@@ -222,6 +232,8 @@ fn print_table(begin: u64, code: &[u8]) {
         prev_ip = ip + instruction.len() as u64 - prev_alignment_16;
         green = !green;
     }
+
+    (mnemonic_count, mnemonic_legnth)
 }
 
 fn print_label() {
@@ -238,10 +250,49 @@ fn print_label() {
     println!();
 }
 
+fn print_mnemonic_count(mnemonic_count: HashMap<String, (u64, u64)>, mnemonic_legnth: usize) {
+    println!();
+    println!();
+    println!();
+    let mut mnemonic_count: Vec<_> = mnemonic_count.into_iter().collect();
+    mnemonic_count.sort_unstable_by_key(|(_, (_, l))| Reverse(*l));
+
+    for _ in 0..mnemonic_legnth + 2 {
+        print!(" ");
+    }
+    println!("Count   Bytes");
+
+    let mut green = true;
+    for (mnemonic, (count, bytes_len)) in mnemonic_count {
+        if green {
+            print!("{}", format!("{mnemonic}: ").black().on_green());
+        } else {
+            print!("{}", format!("{mnemonic}: ").black().on_yellow());
+        }
+        for _ in 0..mnemonic_legnth - mnemonic.len() {
+            if green {
+                print!("{}", " ".on_green());
+            } else {
+                print!("{}", " ".on_yellow());
+            }
+        }
+
+        if green {
+            print!("{}", format!("{count:5}   {bytes_len:5}").black().on_green());
+        } else {
+            print!("{}", format!("{count:5}   {bytes_len:5}").black().on_yellow());
+        }
+        println!();
+
+        green = !green;
+    }
+}
+
 fn disassemble(begin: u64, code: &[u8]) {
     print_label();
     print_disassemble(begin, code);
-    print_table(begin, code);
+    let (mnemonic_count, mnemonic_legnth) = print_table(begin, code);
+    print_mnemonic_count(mnemonic_count, mnemonic_legnth);
 }
 
 fn read_elf_file(path: &Path) -> Vec<u8> {
