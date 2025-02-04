@@ -1,7 +1,3 @@
-# Doc for nix-ld: https://github.com/nix-community/nix-ld
-# https://github.com/mcdonc/.nixconfig/blob/master/videos/pydev/script.rst
-# https://www.youtube.com/watch?v=7lVP4NJWJ9g
-# https://github.com/Mic92/dotfiles/blob/main/machines/modules/fhs-compat.nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -34,7 +30,6 @@
           pkgs.cargo-valgrind
           pkgs.cargo-fuzz
           pkgs.cargo-pgo
-          pkgs.rustfilt
 
           pkgs.openssl
           pkgs.pkg-config
